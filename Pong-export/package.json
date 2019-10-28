@@ -1,0 +1,26 @@
+{
+  "fitbit": {
+    "appUUID": "f281f9d7-f8f9-4c47-bc4a-b0f27d6e0ad8",
+    "appType": "app",
+    "appDisplayName": "Pong",
+    "iconFile": "resources/icon.png",
+    "wipeColor": "#607d8b",
+    "requestedPermissions": [
+      "access_heart_rate"
+    ],
+    "buildTargets": [
+      "higgs",
+      "meson",
+      "gemini"
+    ],
+    "i18n": {
+      "en": {
+        "name": "Pong"
+      }
+    },
+    "defaultLanguage": "en-US"
+  },
+  "devDependencies": {
+    "@fitbit/sdk": "~3.1.0"
+  }
+}
