@@ -5,6 +5,18 @@ import {
     HeartRateSensor
 } from "heart-rate";
 import clock from "clock";
+import {
+    OrientationSensor
+} from "orientation";
+import {
+    display
+} from "display";
+
+
+display.autoOff = false;
+display.on = true;
+
+
 clock.granularity = "seconds";
 
 let pong = document.getElementById("pong");
@@ -20,6 +32,8 @@ let leftscore = document.getElementById("leftscore");
 let rightscore = document.getElementById("rightscore");
 let pong = document.getElementById("pong");
 let restart = document.getElementById("restart");
+let btnnogyro = document.getElementById("btn-no");
+let btnyesgyro = document.getElementById("btn-yes");
 
 let btnnormal = document.getElementById("normalbtn");
 let btnheartcore = document.getElementById("heartcorebtn");
@@ -56,13 +70,22 @@ let score = 0;
 let didhit = false;
 let random = 0;
 
+let gyro = false;
+
 ball.cx = 50;
 
 restart.onclick = function(e) {
-  restartGame();
+    restartGame();
 }
 
 btnnormal.onclick = function(e) {
+    
+    // Falls der User Gyro im Menü ausgwählt hat
+    if (btnyesgyro.value == 1) {
+        gyro = true;
+    } else {
+        gyro = false;
+    }
 
     heartcoremode = false;
 
@@ -86,6 +109,13 @@ btnnormal.onclick = function(e) {
 
 btnheartcore.onclick = function(e) {
 
+    // Falls der User Gyro im Menü ausgwählt hat
+    if (btnyesgyro.value == 1) {
+        gyro = true;
+    } else {
+        gyro = false;
+    }
+
     heartcoremode = true;
 
     // Alle Game UI Elemente (inkl Heartrate) werden sichtbar und Menü wird unsichtbar
@@ -104,6 +134,43 @@ btnheartcore.onclick = function(e) {
     ballspeedY = 1.0;
     ballspeedX = 1.0;
 
+}
+
+// Falls OrientationSensor vorhanden ist
+if (OrientationSensor) {
+    const orientation = new OrientationSensor({
+        frequency: 20
+    });
+    orientation.addEventListener("reading", () => {
+        // Falls der User Gyro im Menü ausgwählt hat
+        if (gyro) {
+            // Falls Spieler zu weit links ist
+            if (player.x < 0) {
+                player.x = 0;
+            }
+            // Falls Spieler zu weit rechts ist
+            else if (player.x > watchwidth - playerwidth) {
+                player.x = watchwidth - playerwidth;
+            }
+            // Wenn alles ok ist    
+            else {
+                //console.log(orientation.quaternion[1]);
+                // Falls User Uhr gerade hält
+                if (orientation.quaternion[1] >= -0.05 && orientation.quaternion[1] <= 0.05) {
+                    player.x = player.x;
+                }
+                //Falls User Uhr nach vorne neigt
+                else if (orientation.quaternion[1] <= 0) {
+                    player.x -= 6;
+                }
+                //Falls User Uhr nach hinten neigt
+                else {
+                    player.x += 6;
+                }
+            }
+        }
+    });
+    orientation.start();
 }
 
 
@@ -128,9 +195,9 @@ rect.onmousemove = (event) => {
 
 // Jede 20ms
 let timerBall = setInterval(() => {
-    
+
     random = getRandomInt(10);
-  
+
     // Falls Ball den Spieler trifft
     if (ball.cy >= watchheight - balldiameter && ball.cy <= watchheight && ball.cx + ballradius >= player.x - ballradius && ball.cx - ballradius <= player.x + playerwidth + ballradius && updown == "down") {
 
@@ -204,9 +271,8 @@ let timerBall = setInterval(() => {
     if (ball.cy >= watchheight) {
         // Farbe des Balls und Spieler auf schwarz und Text "You Lost!" erscheint
         gameover = true;
-        if (gameover)
-        {
-          restart.style.visibility = "visible";
+        if (gameover) {
+            restart.style.visibility = "visible";
         }
         ball.style.visibility = "hidden";
         player.style.visibility = "hidden";
@@ -252,37 +318,43 @@ if (HeartRateSensor && heartcoremode) {
     hrm.start();
 }
 
-function restartGame()
-{
-  // Gameover = false, sodass der Restart Button nicht nocheinmal erscheint
-  gameover = false;
-  
-  // Ballspeed wird auf 0 gesetzt um Komplikationen zu vermeiden
-  ballspeedY = 0.0;
-  ballspeedX = 0.0;
-  
-  player.x = 348 / 2;
-  ball.cx = 0;
-  ball.cy = 0;
-  
-  score = 0;
-  scoretxt.text = "Score: " + score;
+function restartGame() {
 
-  winorlose.text = "";
-  pong.style.visibility = "visible";
-  rect.style.visibility = "hidden";
-  ball.style.visibility = "hidden";
-  player.style.visibility = "hidden";
-  scoretxt.style.visibility = "hidden";
-  winorlose.style.visibility = "hidden";
-  heartratetxt.style.visibility = "hidden";
-  rightscore.style.visibility = "hidden";
-  leftscore.style.visibility = "hidden";
-  btnnormal.style.visibility = "visible";
-  btnheartcore.style.visibility = "visible";
-  restart.style.visibility = "hidden";
+    // Knöpfe werden reseted
+    btnyesgyro.value = 0;
+    btnnogyro.value = 1;
+
+    gyro = false;
+
+    // Gameover = false, sodass der Restart Button nicht nocheinmal erscheint
+    gameover = false;
+
+    // Ballspeed wird auf 0 gesetzt um Komplikationen zu vermeiden
+    ballspeedY = 0.0;
+    ballspeedX = 0.0;
+
+    player.x = 348 / 2;
+    ball.cx = 0;
+    ball.cy = 0;
+
+    score = 0;
+    scoretxt.text = "Score: " + score;
+
+    winorlose.text = "";
+    pong.style.visibility = "visible";
+    rect.style.visibility = "hidden";
+    ball.style.visibility = "hidden";
+    player.style.visibility = "hidden";
+    scoretxt.style.visibility = "hidden";
+    winorlose.style.visibility = "hidden";
+    heartratetxt.style.visibility = "hidden";
+    rightscore.style.visibility = "hidden";
+    leftscore.style.visibility = "hidden";
+    btnnormal.style.visibility = "visible";
+    btnheartcore.style.visibility = "visible";
+    restart.style.visibility = "hidden";
 }
 
 function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
+    return Math.floor(Math.random() * Math.floor(max));
 }
