@@ -7,7 +7,6 @@
   <use id="heartcorebtn" x="15%" width="70%" href="#square-button" y="$" fill="fb-red">
     <set href="#text" attributeName="text-buffer" to="Heartcore Mode" />
   </use> 
-  
   <rect id="rect" x="0" y="0" width="100%" height="100%" pointer-events="visible" />
   <text id="winorlose" x="50%" y="50%" font-family="System-Regular" fill="white" font-size="50" font-weight="bold" text-anchor="middle" text-length="9"></text> 
   <circle id="ball" cx="0" cy="0" fill="white" r="10"/>
@@ -15,5 +14,8 @@
   <rect id="leftscore" x="0" y="0" width="70" height="5" fill="red"/>
   <rect id="rightscore" x="278" y="0" width="70" height="5" fill="red"/>
   <text id="score" x="60" y="30" font-family="System-Regular" fill="white" font-size="30" font-weight="bold" text-anchor="middle"> Score: 0 </text>
-  <text id="heartrate" x="258" y="30" font-family="System-Regular" fill="white" font-size="30" font-weight="bold" text-anchor="middle"> Heartrate: 0 </text>
+  <text id="heartrate" x="238" y="30" font-family="System-Regular" fill="white" font-size="30" font-weight="bold" text-anchor="middle"> Heartrate: 0 </text>
+   <use id="restart" x="15%" width="70%" href="#square-button" y="70%" fill="fb-red">
+    <set href="#text" attributeName="text-buffer" to="Restart" />
+  </use> 
 </svg>

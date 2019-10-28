@@ -16,10 +16,13 @@ let winorlose = document.getElementById("winorlose");
 let heartratetxt = document.getElementById("heartrate");
 let leftscore = document.getElementById("leftscore");
 let rightscore = document.getElementById("rightscore");
+let pong = document.getElementById("pong");
+let restart = document.getElementById("restart");
 
 let btnnormal = document.getElementById("normalbtn");
 let btnheartcore = document.getElementById("heartcorebtn");
 
+restart.style.visibility = "hidden";
 rect.style.visibility = "hidden";
 ball.style.visibility = "hidden";
 player.style.visibility = "hidden";
@@ -54,6 +57,10 @@ let didhit = false;
 
 ball.cx = 50;
 
+restart.onclick = function(e) {
+  restartGame();
+}
+
 btnnormal.onclick = function(e) {
 
     heartcoremode = false;
@@ -69,6 +76,7 @@ btnnormal.onclick = function(e) {
     leftscore.style.visibility = "visible";
     btnnormal.style.visibility = "hidden";
     btnheartcore.style.visibility = "hidden";
+    restart.style.visibility = "hidden";
 
     ballspeedY = 1.0;
     ballspeedX = 1.0;
@@ -90,6 +98,7 @@ btnheartcore.onclick = function(e) {
     leftscore.style.visibility = "visible";
     btnnormal.style.visibility = "hidden";
     btnheartcore.style.visibility = "hidden";
+    restart.style.visibility = "hidden";
 
     ballspeedY = 1.0;
     ballspeedX = 1.0;
@@ -192,8 +201,9 @@ let timerBall = setInterval(() => {
     // Falls Ball unten aus der Welt fällt
     if (ball.cy >= watchheight) {
         // Farbe des Balls und Spieler auf schwarz und Text "You Lost!" erscheint
-        ball.style.fill = "black";
-        player.style.fill = "black";
+        restart.style.visibility = "visible";
+        ball.style.visibility = "hidden";
+        player.style.visibility = "hidden";
         winorlose.text = "You Lost!";
     }
 
@@ -234,4 +244,28 @@ if (HeartRateSensor && heartcoremode) {
         }
     });
     hrm.start();
+}
+
+function restartGame()
+{
+  player.x = 348 / 2;
+  ball.cx = 0;
+  ball.cy = 0;
+  
+  score = 0;
+  scoretxt.text = "Score: " + score;
+
+  winorlose.text = "";
+  pong.style.visibility = "hidden";
+  rect.style.visibility = "hidden";
+  ball.style.visibility = "hidden";
+  player.style.visibility = "hidden";
+  scoretxt.style.visibility = "hidden";
+  winorlose.style.visibility = "hidden";
+  heartratetxt.style.visibility = "hidden";
+  rightscore.style.visibility = "hidden";
+  leftscore.style.visibility = "hidden";
+  btnnormal.style.visibility = "visible";
+  btnheartcore.style.visibility = "visible";
+  restart.style.visibility = "hidden";
 }
