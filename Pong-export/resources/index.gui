@@ -14,7 +14,7 @@
   <rect id="leftscore" x="0" y="0" width="70" height="5" fill="red"/>
   <rect id="rightscore" x="278" y="0" width="70" height="5" fill="red"/>
   <text id="score" x="60" y="30" font-family="System-Regular" fill="white" font-size="30" font-weight="bold" text-anchor="middle"> Score: 0 </text>
-  <text id="heartrate" x="238" y="30" font-family="System-Regular" fill="white" font-size="30" font-weight="bold" text-anchor="middle"> Heartrate: 0 </text>
+  <text id="heartrate" x="238" y="30" font-family="System-Regular" fill="white" font-size="30" font-weight="bold" text-anchor="middle" text-length="14"> Heartrate: 0 </text>
    <use id="restart" x="15%" width="70%" href="#square-button" y="70%" fill="fb-red">
     <set href="#text" attributeName="text-buffer" to="Restart" />
   </use> 

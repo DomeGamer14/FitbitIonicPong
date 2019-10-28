@@ -4,6 +4,8 @@ import document from "document";
 import {
     HeartRateSensor
 } from "heart-rate";
+import clock from "clock";
+clock.granularity = "seconds";
 
 let pong = document.getElementById("pong");
 
@@ -32,6 +34,7 @@ heartratetxt.style.visibility = "hidden";
 rightscore.style.visibility = "hidden";
 leftscore.style.visibility = "hidden";
 
+let gameover = false;
 
 let updown = "down";
 let leftright = "right";
@@ -46,14 +49,12 @@ const balldiameter = 20;
 const ballradius = 10;
 
 const scorewidth = 70;
-
 const heartcoremode = true;
 
 let heartrate = 0;
-
 let score = 0;
-
 let didhit = false;
+let random = 0;
 
 ball.cx = 50;
 
@@ -127,8 +128,9 @@ rect.onmousemove = (event) => {
 
 // Jede 20ms
 let timerBall = setInterval(() => {
-
-
+    
+    random = getRandomInt(10);
+  
     // Falls Ball den Spieler trifft
     if (ball.cy >= watchheight - balldiameter && ball.cy <= watchheight && ball.cx + ballradius >= player.x - ballradius && ball.cx - ballradius <= player.x + playerwidth + ballradius && updown == "down") {
 
@@ -190,18 +192,22 @@ let timerBall = setInterval(() => {
     // Falls Ball richtung links fliegt
     if (leftright == "left") {
         // Ball-Speed negativ, also nach links
-        ball.cx -= ballspeedX;
+        ball.cx -= ballspeedX + ballspeedX * (random / 5);
     }
     // Falls Ball richtung rechts fliegt
     if (leftright == "right") {
         // Ball Speed positiv, also nach rechts
-        ball.cx += ballspeedX;
+        ball.cx += ballspeedX + ballspeedX * (random / 5);
     }
 
     // Falls Ball unten aus der Welt fällt
     if (ball.cy >= watchheight) {
         // Farbe des Balls und Spieler auf schwarz und Text "You Lost!" erscheint
-        restart.style.visibility = "visible";
+        gameover = true;
+        if (gameover)
+        {
+          restart.style.visibility = "visible";
+        }
         ball.style.visibility = "hidden";
         player.style.visibility = "hidden";
         winorlose.text = "You Lost!";
@@ -248,6 +254,13 @@ if (HeartRateSensor && heartcoremode) {
 
 function restartGame()
 {
+  // Gameover = false, sodass der Restart Button nicht nocheinmal erscheint
+  gameover = false;
+  
+  // Ballspeed wird auf 0 gesetzt um Komplikationen zu vermeiden
+  ballspeedY = 0.0;
+  ballspeedX = 0.0;
+  
   player.x = 348 / 2;
   ball.cx = 0;
   ball.cy = 0;
@@ -256,7 +269,7 @@ function restartGame()
   scoretxt.text = "Score: " + score;
 
   winorlose.text = "";
-  pong.style.visibility = "hidden";
+  pong.style.visibility = "visible";
   rect.style.visibility = "hidden";
   ball.style.visibility = "hidden";
   player.style.visibility = "hidden";
@@ -268,4 +281,8 @@ function restartGame()
   btnnormal.style.visibility = "visible";
   btnheartcore.style.visibility = "visible";
   restart.style.visibility = "hidden";
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
 }
