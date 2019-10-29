@@ -72,6 +72,14 @@ let random = 0;
 
 let gyro = false;
 
+let diagonal = (ballradius * Math.sqrt(2)).toFixed(2);
+let flaeche = (ballradius * ballradius) / 2;
+let flaecheuebrig = flaeche / 2;
+
+console.log(diagonal);
+console.log(flaeche);
+
+
 ball.cx = 50;
 
 restart.onclick = function(e) {
@@ -195,11 +203,12 @@ rect.onmousemove = (event) => {
 
 // Jede 20ms
 let timerBall = setInterval(() => {
-
+    console.log(watchheight - ball.cy)
     random = getRandomInt(10);
 
     // Falls Ball den Spieler trifft
-    if (ball.cy >= watchheight - balldiameter && ball.cy <= watchheight && ball.cx + ballradius >= player.x - ballradius && ball.cx - ballradius <= player.x + playerwidth + ballradius && updown == "down") {
+    //if (ball.cy >= watchheight - balldiameter && ball.cy <= watchheight && ball.cx + ballradius >= player.x - ballradius && ball.cx - ballradius <= player.x + playerwidth + ballradius && updown == "down") {
+      if (ball.cy >= watchheight - balldiameter && ball.cy <= watchheight && ball.cx + watchheight - ball.cy + ballradius >= player.x + watchheight - ball.cy + ballradius && ball.cx - ballradius <= player.x + playerwidth + ballradius && updown == "down") {
 
         // Falls Ball auf der rechten Seite des Spielers auftrifft
         if (ball.cx >= player.x + playerwidth / 2) {
